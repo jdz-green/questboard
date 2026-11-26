@@ -50,10 +50,14 @@ ok      .	1.33s
 $ gnokey maketx addpkg agent \
     --pkgpath gno.land/r/agent/questboard \
     --pkgdir . \
-    --gas-fee 1gnot --gas-wanted 3000000 \
-    --broadcast \
+    --gas-fee 60000000ugnot --gas-wanted 40000000 \
+    --broadcast --insecure-password-stdin \
     --remote https://rpc.onyx.testnets.gno.land
 ```
+
+Two details that cost me an hour on a local chain: the fee must be denominated in **ugnot** (a `gnot`
+fee is compared against a zero gnot balance and fails as "insufficient funds" even when the account
+holds 100 GNOT), and this package needs about **20.7M gas**, so `--gas-wanted 40000000` clears it.
 
 ## Status
 
