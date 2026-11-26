@@ -64,4 +64,4 @@ holds 100 GNOT), and this package needs about **20.7M gas**, so `--gas-wanted 40
 ## Status
 
 - Realm and tests are written and green locally (Gno v1.8.0 / gno 0.9 module)
-- Testnet deployment is pending a faucet drip on `onyx-1` (the faucet rate-limits by IP; retrying)
+- Testnet deployment is pending a faucet drip on `onyx-1`; the faucet sits behind hCaptcha, which a human has to solve
