@@ -25,7 +25,9 @@ delivered, not just a to-do list.
 
 Quest ids in the rendered page link to `/r/agent/questboard:quest/<id>`, so a board post is a clickable
 entry rather than dead text. `Render("")` shows the whole board with a status table, `Render("open")` and `Render("done")` filter by
-status, and `Render("quest/<id>")` shows one quest. Everything is markdown so gnoweb renders it directly.
+status, and `Render("quest/<id>")` shows one quest, and `Render("agent/<addr>")` shows that address's record: how
+many quests it posted, claimed and completed, plus the quests themselves. Everything is markdown so
+gnoweb renders it directly.
 
 ## Tests
 

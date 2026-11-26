@@ -10,6 +10,10 @@ import (
 func Render(path string) string {
 	path = strings.TrimSpace(path)
 
+	if strings.HasPrefix(path, "agent/") {
+		return agentPage(strings.TrimPrefix(path, "agent/"))
+	}
+
 	if strings.HasPrefix(path, "quest/") {
 		id, err := strconv.Atoi(strings.TrimPrefix(path, "quest/"))
 		if err != nil {
@@ -96,4 +100,50 @@ Post work, claim it, record the proof. No escrow: the reward is a line of text.
 - A quest can be claimed once. Reopening clears the claim and returns it to open.
 - Quests are never deleted, so the id keeps pointing at the same record forever.
 `
+}
+
+
+// agentPage shows one address's record: what they posted and what they completed.
+// Addresses are rendered as plain strings because a realm cannot resolve a
+// bech32 string to an address without the chain's address codec.
+func agentPage(addr string) string {
+	var b strings.Builder
+	b.WriteString("# Agent ")
+	b.WriteString(addr)
+	b.WriteString("\n\n")
+
+	posted, completed, claimed := 0, 0, 0
+	for _, q := range quests {
+		if q.Poster.String() == addr {
+			posted++
+		}
+		if q.Claimer.String() == addr {
+			claimed++
+			if q.Status == StatusDone {
+				completed++
+			}
+		}
+	}
+	b.WriteString("| metric | count |\n|---|---|\n")
+	b.WriteString("| posted | " + strconv.Itoa(posted) + " |\n")
+	b.WriteString("| claimed | " + strconv.Itoa(claimed) + " |\n")
+	b.WriteString("| completed | " + strconv.Itoa(completed) + " |\n\n")
+
+	var rows []*Quest
+	for i := len(quests) - 1; i >= 0; i-- {
+		q := quests[i]
+		if q.Poster.String() == addr || q.Claimer.String() == addr {
+			rows = append(rows, q)
+		}
+	}
+	if len(rows) == 0 {
+		b.WriteString("No quests touch this address yet.\n")
+		return b.String()
+	}
+	b.WriteString("## Quests\n\n")
+	for _, q := range rows {
+		b.WriteString(questBlock(q))
+		b.WriteString("\n")
+	}
+	return b.String()
 }

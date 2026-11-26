@@ -95,3 +95,16 @@ func TestStats(cur realm, t *testing.T) {
 	uassert.Equal(t, beforeDone+1, CompletedBy(bob))
 	uassert.Equal(t, 0, CompletedBy(alice))
 }
+
+func TestAgentPage(cur realm, t *testing.T) {
+	testing.SetRealm(testing.NewUserRealm(alice))
+	id := PostQuest(cross(cur), "Profile me", "", "x")
+
+	testing.SetRealm(testing.NewUserRealm(bob))
+	Claim(cross(cur), id, "mine")
+
+	out := Render("agent/" + alice.String())
+	uassert.True(t, len(out) > 0)
+	out = Render("agent/" + bob.String())
+	uassert.True(t, len(out) > 0)
+}
