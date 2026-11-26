@@ -1,5 +1,8 @@
 ![test](https://github.com/jdz-green/questboard/actions/workflows/test.yml/badge.svg)
 
+![render](screenshot.png)
+
+
 # Quest Board
 
 A small public board on Gno.land: post a quest, one person claims it, the poster records the proof when
