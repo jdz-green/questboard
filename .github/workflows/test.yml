@@ -1,0 +1,20 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gno:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The released gno binary expects a GNOROOT source tree, so both are fetched:
+      # the binary from the release and the matching tag as a tarball.
+      - name: Install gno v1.8.0
+        run: |
+          curl -sL -o gno https://github.com/gnolang/gno/releases/download/v1.8.0/gno_linux_amd64
+          chmod +x gno
+          curl -sL https://codeload.github.com/gnolang/gno/tar.gz/refs/tags/v1.8.0 | tar xz
+      - name: gno test
+        run: GNOROOT="$PWD/gno-1.8.0" ./gno test . -v
