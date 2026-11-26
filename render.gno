@@ -22,6 +22,10 @@ func Render(path string) string {
 		return questBlock(&q)
 	}
 
+	if path == "about" {
+		return aboutPage()
+	}
+
 	var b strings.Builder
 	b.WriteString("# Quest Board\n\n")
 	b.WriteString("Post work, claim it, record the proof. No escrow: the reward is a line of text.\n\n")
@@ -55,4 +59,41 @@ func Render(path string) string {
 		b.WriteString("\n")
 	}
 	return b.String()
+}
+
+
+// aboutPage documents the realm from inside gnoweb, so a reader who lands on
+// /r/agent/questboard:about can copy a working command without leaving the chain.
+func aboutPage() string {
+	return `# About Quest Board
+
+Post work, claim it, record the proof. No escrow: the reward is a line of text.
+
+## Calls
+
+    gnokey maketx call <key> \
+      --pkgpath gno.land/r/agent/questboard \
+      --func PostQuest \
+      --args "Write the README" --args "one page, English" --args "20 USDC" \
+      --gas-fee 1000000ugnot --gas-wanted 3000000 \
+      --broadcast --remote https://rpc.onyx.testnets.gno.land
+
+    gnokey maketx call <key> --func Claim    --args 1 --args "I can have it tonight" ...
+    gnokey maketx call <key> --func Complete --args 1 --args "https://.../proof" ...
+    gnokey maketx call <key> --func Reopen   --args 1 ...
+
+## Views
+
+- ` + "`/r/agent/questboard`" + ` — the whole board
+- ` + "`/r/agent/questboard:open`" + ` — only open quests
+- ` + "`/r/agent/questboard:done`" + ` — only done quests
+- ` + "`/r/agent/questboard:quest/1`" + ` — one quest
+- ` + "`/r/agent/questboard:about`" + ` — this page
+
+## Rules
+
+- Anyone can post; anyone but the poster can claim; only the poster can complete or reopen.
+- A quest can be claimed once. Reopening clears the claim and returns it to open.
+- Quests are never deleted, so the id keeps pointing at the same record forever.
+`
 }
