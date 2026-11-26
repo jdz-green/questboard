@@ -76,3 +76,22 @@ func TestRender(cur realm, t *testing.T) {
 	uassert.True(t, len(Render("open")) > 0)
 	uassert.True(t, len(Render("quest/1")) > 0)
 }
+
+func TestStats(cur realm, t *testing.T) {
+	// State is shared across tests in this package, so assert deltas.
+	beforePosted := PostedBy(alice)
+	beforeDone := CompletedBy(bob)
+
+	testing.SetRealm(testing.NewUserRealm(alice))
+	id := PostQuest(cross(cur), "Count me", "", "x")
+
+	testing.SetRealm(testing.NewUserRealm(bob))
+	Claim(cross(cur), id, "mine")
+
+	testing.SetRealm(testing.NewUserRealm(alice))
+	Complete(cross(cur), id, "proof")
+
+	uassert.Equal(t, beforePosted+1, PostedBy(alice))
+	uassert.Equal(t, beforeDone+1, CompletedBy(bob))
+	uassert.Equal(t, 0, CompletedBy(alice))
+}

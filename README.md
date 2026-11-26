@@ -16,13 +16,15 @@ deadline 2026-12-18).
 | `Claim(id, note)` | anyone but the poster | marks it claimed, records the claimer and their note |
 | `Complete(id, proof)` | poster only | marks it done, records the proof link |
 | `Reopen(id)` | poster only | returns a claimed quest to open and clears the claim |
+| `PostedBy(addr)` / `CompletedBy(addr)` | anyone | counters used by the render page |
 
 State is append-only: quests are never deleted, so the board is a record of what was asked and what was
 delivered, not just a to-do list.
 
 ## Rendering
 
-`Render("")` shows the whole board with a status table, `Render("open")` and `Render("done")` filter by
+Quest ids in the rendered page link to `/r/agent/questboard:quest/<id>`, so a board post is a clickable
+entry rather than dead text. `Render("")` shows the whole board with a status table, `Render("open")` and `Render("done")` filter by
 status, and `Render("quest/<id>")` shows one quest. Everything is markdown so gnoweb renders it directly.
 
 ## Tests

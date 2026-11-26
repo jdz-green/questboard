@@ -147,6 +147,28 @@ func ByStatus(status string) []int {
 	return ids
 }
 
+// CompletedBy returns how many quests the address has completed as claimer.
+func CompletedBy(addr address) int {
+	n := 0
+	for _, q := range quests {
+		if q.Status == StatusDone && q.Claimer == addr {
+			n++
+		}
+	}
+	return n
+}
+
+// PostedBy returns how many quests the address has posted.
+func PostedBy(addr address) int {
+	n := 0
+	for _, q := range quests {
+		if q.Poster == addr {
+			n++
+		}
+	}
+	return n
+}
+
 func statusLine(q *Quest) string {
 	switch q.Status {
 	case StatusOpen:
